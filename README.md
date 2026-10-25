@@ -5,9 +5,9 @@
 * **Prodi:** Ilmu Komputer
 * **Mata Kuliah:** Pengolahan Citra Digital
 
-Di repositori ini saya mengimplementasikan segmentasi Otsu Thresholding dan operasi morfologi (erosi, dilasi, opening, closing) dari nol tanpa library pengolahan citra pada citra sidik jari, lalu membandingkan hasil segmentasi sebelum dan sesudah morfologi.
+Pada repo ini saya mengimplementasikan segmentasi Otsu Thresholding dan operasi morfologi (erosi, dilasi, opening, closing) untuk pengolahan citra pada citra sidik jari, lalu membandingkan hasil segmentasi sebelum dan sesudah morfologi.
 
-File: `PCD_Assignment03.ipynb` (notebook), `100__M_Left_index_finger.bmp` (citra), dan tiga gambar hasil (PNG).
+File: `PCD_Assignment03.ipynb` (notebook), `100__M_Left_index_finger.bmp` (citra), dan results citra nya.
 
 ## Alur Pengerjaan
 
@@ -40,20 +40,12 @@ Rasio ROI adalah persentase piksel alur di dalam area sidik jari. Kalau angkanya
 | Opening palang 3x3 | 39 | 18 | 26.9% |
 | Pipeline mask ROI + hapus bintik | 20 | 0 | 56.4% |
 
-## Penjelasan Singkat
-
-Awalnya saya memakai closing palang 3x3 sebagai hasil akhir. Ternyata hasilnya mengisi seluruh area sidik jari menjadi blok putih, karena celah antar alur cuma sekitar 2 piksel. Jumlah komponennya memang turun, tapi itu karena alur-alurnya menyatu, bukan karena tersambung dengan benar (rasio ROI naik dari 57% jadi 89%). Opening 3x3 juga membuang lebih dari separuh piksel alur.
-
-Karena itu pipeline akhir yang saya pakai:
-1. Closing lalu opening dengan kotak 7x7 untuk membentuk mask area sidik jari.
-2. Mask di-AND dengan citra biner mentah.
-3. Komponen di bawah 6 piksel dihapus.
-
-Hasilnya bintik di latar hilang (23 jadi 0) dan alur tetap utuh (rasio ROI 57.0% jadi 56.4%).
-
 ## Kesimpulan
 
-1. Otsu bisa memisahkan alur dari latar secara otomatis, tapi hasil mentahnya masih punya alur putus, pori, dan bintik latar.
-2. Operator tunggal 3x3 kurang cocok untuk citra sekecil ini (96 x 103 piksel) karena alurnya hanya setebal 2 sampai 3 piksel.
-3. Morfologi lebih berguna untuk membentuk mask area sidik jari daripada mengubah alurnya langsung.
-4. Keterbatasan: alur putus di dalam sidik jari belum tersambung, dan bagian bawah yang gelap masih menyatu karena threshold-nya global. Bisa dicoba Otsu per blok.
+1. **Otsu** dapat memisahkan alur sidik jari dari latar belakang secara otomatis dengan T = 128. Tapi hasil mentahnya masih punya alur yang putus-putus dan bintik di latar. Bagian bawah citra juga masih menyatu karena threshold-nya satu untuk seluruh citra.
+
+2. **Operator tunggal 3x3 palang/kernel kurang cocok** untuk citra ini, karena alur dan celahnya cuma selebar 2 sampai 3 piksel. Erosi dan opening membuang lebih dari separuh piksel alur, sedangkan dilasi dan closing menutup celah antar alur sampai area sidik jari jadi blok putih. Jumlah komponen pada closing memang turun, tapi itu karena alurnya menyatu, bukan karena alur yang putus tersambung.
+
+3. **Pipeline mask ROI** hasilnya paling bagus. Mask dibentuk dengan closing dan opening kotak 7x7, di-AND dengan citra mentah, lalu komponen kecil dihapus. Bintik di luar sidik jari hilang dan rasio alur di dalam ROI hampir sama dengan citra mentah, jadi bentuk alurnya tetap terjaga. Di sini morfologi dipakai untuk menemukan daerah sidik jari, bukan untuk mengubah alurnya.
+
+4. **Keterbatasan:** pipeline ini belum menyambung alur yang putus di dalam sidik jari dan belum memperbaiki bagian bawah yang menyatu. Kemungkinan perbaikannya adalah thresholding lokal (misalnya Otsu per blok), namun hal tersebut belum saya lakukan pada tugas ini karena tugas hanya meminta satu metode segmentasi dan beberapa operasi morfologi, sehingga thresholding lokal berada di luar cakupan.
