@@ -5,7 +5,7 @@
 * **Prodi:** Ilmu Komputer
 * **Mata Kuliah:** Pengolahan Citra Digital
 
-Pada repo ini saya mengimplementasikan segmentasi Otsu Thresholding dan operasi morfologi (erosi, dilasi, opening, closing) untuk pengolahan citra pada citra sidik jari, lalu membandingkan hasil segmentasi sebelum dan sesudah morfologi.
+Pada tugas ini saya mengimplementasikan segmentasi Otsu Thresholding dan operasi morfologi (erosi, dilasi, opening, closing) untuk pengolahan citra pada citra sidik jari, lalu membandingkan hasil segmentasi sebelum dan sesudah morfologi.
 
 File: `PCD_Assignment03.ipynb` (notebook), `100__M_Left_index_finger.bmp` (citra), dan results citra nya.
 
